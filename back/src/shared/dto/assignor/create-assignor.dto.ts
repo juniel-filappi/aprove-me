@@ -1,4 +1,4 @@
-import { IsDateString, IsNotEmpty, IsOptional, IsString, IsUUID, Length } from "class-validator";
+import { IsEmail, IsNotEmpty, IsOptional, IsString, IsUUID, Length } from "class-validator";
 
 export class CreateAssignorDto {
     @IsUUID('4')
@@ -10,7 +10,7 @@ export class CreateAssignorDto {
     @Length(3, 30)
     document: string
 
-    @IsDateString({})
+    @IsEmail()
     @IsNotEmpty()
     @Length(6, 140)
     email: string

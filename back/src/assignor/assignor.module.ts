@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AssignorService } from './assignor.service';
 import { AssignorController } from './assignor.controller';
 import { AssignorRepository } from "./assignor.repository";
-import { PrismaModule } from "../prisma/prisma.module";
+import { PrismaModule } from "@/prisma/prisma.module";
 
 @Module({
   imports: [PrismaModule],
