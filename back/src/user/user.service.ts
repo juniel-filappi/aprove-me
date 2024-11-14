@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { UserRepository } from "./user.repository";
-import { RegisterDto } from "../shared/dto/auth/register.dto";
+import { RegisterDto } from "@/shared/dto/auth/register.dto";
 import { hash } from "bcryptjs";
 
 @Injectable()
