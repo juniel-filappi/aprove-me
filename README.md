@@ -94,8 +94,8 @@ $ yarn prisma studio
 
 ## TODO & Prazos
 ### Backend
-- [ ] Nível 1 - Validação
-- [ ] Nível 2 - Persistência
+- [x] Nível 1 - Validação
+- [x] Nível 2 - Persistência
 - [ ] Nível 3 - Testes
 - [x] Nível 4 - Autenticação
 - [x] Nível 5 - Gerenciamento de permissões
