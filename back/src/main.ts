@@ -8,7 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
   app.useGlobalPipes(new ValidationPipe());
-  app.setGlobalPrefix('integrations')
+  app.setGlobalPrefix('api/integrations')
 
   const configService = app.get<ConfigService<Env>>(ConfigService);
   const port = configService.get('PORT', { infer: true });

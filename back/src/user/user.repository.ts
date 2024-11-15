@@ -11,6 +11,12 @@ export class UserRepository {
     }
 
     async create(data: RegisterDto) {
-        return this.prisma.user.create({ data });
+        const dataCreate = {
+            name: data.name,
+            email: data.email,
+            password: data.password
+        }
+
+        return this.prisma.user.create({ data: dataCreate });
     }
 }

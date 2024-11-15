@@ -5,10 +5,11 @@ import { UpdatePayableDto } from "@/shared/dto/payable/update-payable.dto";
 
 @Injectable()
 export class PayableRepository {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(private readonly prisma: PrismaService) {
+    }
 
     async findById(id: string) {
-        return this.prisma.payable.findUnique({ where: { id } })
+        return this.prisma.payable.findUnique({where: {id}})
     }
 
     async getAll() {
@@ -16,14 +17,32 @@ export class PayableRepository {
     }
 
     async create(data: CreatePayableDto) {
-        return this.prisma.payable.create({ data })
+        const dateCreation: CreatePayableDto = {
+            emissionDate: data.emissionDate,
+            value: data.value,
+            assignorId: data.assignorId,
+        }
+
+        if (data.id) {
+            dateCreation.id = data.id
+        }
+
+        return this.prisma.payable.create({
+            data: dateCreation
+        })
     }
 
     async update(id: string, data: UpdatePayableDto) {
-        return this.prisma.payable.update({ where: { id }, data })
+        const dataUpdate: UpdatePayableDto = {
+            emissionDate: data.emissionDate,
+            value: data.value,
+            assignorId: data.assignorId,
+        }
+
+        return this.prisma.payable.update({where: {id}, data: dataUpdate})
     }
 
     async delete(id: string) {
-        return this.prisma.payable.delete({ where: { id } })
+        return this.prisma.payable.delete({where: {id}})
     }
 }

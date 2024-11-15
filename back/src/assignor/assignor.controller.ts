@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, ValidationPipe } from '@nestjs/common';
 import { AssignorService } from "./assignor.service";
 import { CreateAssignorDto } from "@/shared/dto/assignor/create-assignor.dto";
 import { UpdateAssignorDto } from "@/shared/dto/assignor/update-assignor.dto";
@@ -14,22 +14,24 @@ export class AssignorController {
     }
 
     @Get(':id')
-    async getAssignor(id: string) {
+    async getAssignor(@Param('id') id: string) {
         return this.service.getAssignor(id)
     }
 
     @Post()
+    @HttpCode(HttpStatus.CREATED)
     async create(@Body() request: CreateAssignorDto) {
         return this.service.create(request)
     }
 
     @Put(':id')
-    async update(id: string, @Body() request: UpdateAssignorDto) {
+    async update(@Param('id') id: string, @Body() request: UpdateAssignorDto) {
         return this.service.update(id, request)
     }
 
     @Delete(':id')
-    async delete(id: string) {
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async delete(@Param('id') id: string) {
         return this.service.delete(id)
     }
 }

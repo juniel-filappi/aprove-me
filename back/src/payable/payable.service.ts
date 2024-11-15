@@ -1,14 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { CreatePayableDto } from "@/shared/dto/payable/create-payable.dto";
 import { PayableRepository } from "./payable.repository";
 import { AssignorRepository } from "@/assignor/assignor.repository";
 import { UpdatePayableDto } from "@/shared/dto/payable/update-payable.dto";
+import { InjectQueue } from "@nestjs/bull";
+import { Queue } from "bull";
 
 @Injectable()
 export class PayableService {
     constructor(
         private readonly payableRepository: PayableRepository,
         private readonly assignorRepository: AssignorRepository,
+        @InjectQueue('payable') private payableQueue: Queue
     ) {
     }
 
@@ -62,5 +65,13 @@ export class PayableService {
         }
 
         return this.payableRepository.delete(id)
+    }
+
+    async enqueuePayables(payables: CreatePayableDto[]) {
+        if (payables.length > 10) {
+            throw new UnprocessableEntityException('Batch size limit exceeded');
+        }
+
+        await this.payableQueue.add('processPayableBatch', { payables });
     }
 }

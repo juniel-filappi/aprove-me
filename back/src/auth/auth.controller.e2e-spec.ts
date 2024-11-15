@@ -1,4 +1,4 @@
-import { INestApplication } from "@nestjs/common";
+import { HttpStatus, INestApplication } from "@nestjs/common";
 import { PrismaService } from "@/prisma/prisma.service";
 import { Test } from "@nestjs/testing";
 import { AppModule } from "@/app.module";
@@ -21,13 +21,13 @@ describe('AuthController (e2e)', () => {
     })
 
     it('should be able to register a new user', async () => {
-        const response = await request(app.getHttpServer()).post('/integrations/auth/register').send({
+        const response = await request(app.getHttpServer()).post('/auth/register').send({
             name: 'John Doe',
             email: 'johndoe@example.com',
             password: '123456',
         })
 
-        expect(response.status).toBe(201)
+        expect(response.status).toBe(HttpStatus.CREATED)
 
         const userOnDatabase = await prisma.user.findUnique({
             where: {
@@ -39,13 +39,31 @@ describe('AuthController (e2e)', () => {
     })
 
     it('should be able to authenticate a user', async () => {
-        const responseAuth = await request(app.getHttpServer()).post('/integrations/auth/login').send({
+        const responseAuth = await request(app.getHttpServer()).post('/auth/login').send({
             email: 'johndoe@example.com',
             password: '123456'
         })
 
-        expect(responseAuth.status).toBe(200)
+        expect(responseAuth.status).toBe(HttpStatus.OK)
 
         expect(responseAuth.body).toHaveProperty('access_token')
+    })
+
+    it('should not be able to authenticate a user with wrong password', async () => {
+        const responseAuth = await request(app.getHttpServer()).post('/auth/login').send({
+            email: 'johndoe@example.com',
+            password: 'wrong-password'
+        })
+
+        expect(responseAuth.status).toBe(HttpStatus.UNAUTHORIZED)
+    })
+
+    it('should not be able to register a user with the same email', async () => {
+        const response = await request(app.getHttpServer()).post('/auth/register').send({
+            name: 'John Doe',
+            email: 'johndoe@example.com',
+        })
+
+        expect(response.status).toBe(HttpStatus.BAD_REQUEST)
     })
 })

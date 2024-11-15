@@ -21,11 +21,29 @@ export class AssignorRepository {
     }
 
     async create(data: CreateAssignorDto) {
-        return this.prisma.assignor.create({data})
+        const dataCreate: CreateAssignorDto = {
+            document: data.document,
+            email: data.email,
+            phone: data.phone,
+            name: data.name
+        }
+
+        if (data.id) {
+            dataCreate.id = data.id
+        }
+
+        return this.prisma.assignor.create({data: dataCreate})
     }
 
     async update(id: string, data: UpdateAssignorDto) {
-        return this.prisma.assignor.update({where: {id}, data})
+        const dataUpdate = {
+            document: data.document,
+            email: data.email,
+            phone: data.phone,
+            name: data.name
+        }
+
+        return this.prisma.assignor.update({where: {id}, data: dataUpdate})
     }
 
     async delete(id: string) {
