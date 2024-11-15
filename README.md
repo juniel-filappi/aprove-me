@@ -63,10 +63,6 @@ Primeiro clone o repositório em seu computador, por meio do terminal utilizando
   $ cd back
   # Instale as dependências da aplicação
   $ yarn # ou npm install
-  # Execute o generate do prisma
-  $ yarn prisma generate
-  # Execute o comando abaixo para iniciar o projeto
-  $ yarn start
   # Inicie o container do docker
   $ docker-compose up -d
 ```
