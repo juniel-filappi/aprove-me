@@ -63,6 +63,8 @@ Primeiro clone o repositório em seu computador, por meio do terminal utilizando
   $ cd back
   # Instale as dependências da aplicação
   $ yarn # ou npm install
+  # Configure o arquivo .env
+  $ cp .env.example .env
   # Inicie o container do docker
   $ docker-compose up -d
 ```
