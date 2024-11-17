@@ -76,6 +76,8 @@ Primeiro clone o repositório em seu computador, por meio do terminal utilizando
   $ cd front
   # Instale as dependências da aplicação
   $ yarn # ou npm install
+  # Configure o arquivo .env
+  $ cp .env.example .env
   # Execute o comando abaixo para iniciar o projeto
   $ yarn dev
 ```
