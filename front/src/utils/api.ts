@@ -1,5 +1,4 @@
 import axios from "axios";
-import Router from "next/router";
 
 const api = axios.create({
     baseURL: "http://localhost:3333/api/",
@@ -29,9 +28,10 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response.status === 401) {
-            localStorage.clear();
-
-            window.location.href = "/";
+            if (typeof window !== "undefined") {
+                localStorage.clear();
+                window.location.href = "/";
+            }
         }
         return Promise.reject(error);
     }

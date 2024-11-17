@@ -2,41 +2,40 @@
 
 import { Button } from "primereact/button";
 import { useRouter } from "next/navigation";
-import FormAssignor from "@/components/assignor/FormAssignor";
 import { useFormik } from "formik";
-import { createOrUpdateAssignorSchema } from "@/components/assignor/validation";
-import { useGetAssignor, useUpdateAssignor } from "@/hooks/useAssignor";
 import { useLayoutEffect } from "react";
 import { useToastContext } from "@/providers/ToastContextProvider";
 import LayoutDashboard from "@/components/LayoutDashboard";
 import { AxiosError } from "axios";
+import { useGetPayable, useUpdatePayable } from "@/hooks/usePayable";
+import { createOrUpdatePayableSchema } from "@/components/payable/validation";
+import FormPayable from "@/components/payable/FormPayable";
 import Head from "next/head";
 
 export default function Update({ id }: { id: string }) {
     const router = useRouter();
-
     const { showToast } = useToastContext();
-    const { mutate, isPending, isSuccess, isError, error } = useUpdateAssignor(id);
-    const { data: assignor } = useGetAssignor(id);
-
+    const { mutate, isPending, isSuccess, isError, error } = useUpdatePayable(id);
+    const { data: payable } = useGetPayable(id);
     const formik = useFormik({
-        validationSchema: createOrUpdateAssignorSchema,
+        validationSchema: createOrUpdatePayableSchema,
         initialValues: {
-            name: '',
-            email: '',
-            document: '',
-            phone: ''
+            value: 0,
+            emissionDate: new Date(),
+            assignorId: ''
         },
-        onSubmit: (data) => mutate(data)
+        onSubmit: (data) => mutate({
+            ...data,
+            emissionDate: data.emissionDate.toISOString()
+        })
     })
 
     useLayoutEffect(() => {
-        if (assignor) {
+        if (payable) {
             formik.setValues({
-                name: assignor.name,
-                email: assignor.email,
-                document: assignor.document,
-                phone: assignor.phone
+                value: payable.value,
+                emissionDate: new Date(payable.emissionDate),
+                assignorId: payable.assignorId
             })
         }
 
@@ -44,9 +43,9 @@ export default function Update({ id }: { id: string }) {
             showToast({
                 severity: 'success',
                 summary: 'Sucesso',
-                detail: 'Cedente atualizado com sucesso.'
+                detail: 'Recebível atualizado com sucesso.'
             })
-            router.push('/dashboard/assignor');
+            router.push('/dashboard/payable');
         }
 
         if (isError) {
@@ -60,20 +59,20 @@ export default function Update({ id }: { id: string }) {
                 showToast({
                     severity: 'error',
                     summary: 'Erro',
-                    detail: 'Erro ao atualizar cedente.'
+                    detail: 'Erro ao atualizar recebível.'
                 })
             }
         }
-    }, [assignor, error, isError, isSuccess, router, showToast]);
+    }, [error, isError, isSuccess, router, showToast, payable]);
 
     return (
         <LayoutDashboard>
             <Head>
-                <title>Atualizar Cedente | Aprove-me</title>
+                <title>Atualizar Recebível | Aprove-me</title>
             </Head>
-            <h1 className="text-4xl">Atualizar Cedente</h1>
+            <h1 className="text-4xl">Atualizar Recebível</h1>
             <form className="mt-10" onSubmit={formik.handleSubmit}>
-                <FormAssignor formik={formik} loading={isPending} />
+                <FormPayable formik={formik} loading={isPending} />
                 <div className="flex justify-between mt-4">
                     <Button
                         type="button"
@@ -82,7 +81,7 @@ export default function Update({ id }: { id: string }) {
                         outlined
                         icon="pi pi-arrow-left"
                         loading={isPending}
-                        onClick={() => router.push('/dashboard/assignor')}
+                        onClick={() => router.push('/dashboard/payable')}
                     />
                     <Button type="submit" label="Salvar" loading={isPending} />
                 </div>

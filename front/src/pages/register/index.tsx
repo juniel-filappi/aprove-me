@@ -8,14 +8,14 @@ import { useFormik } from "formik";
 import { registerSchemaValidation } from "@/pages/register/validation";
 import { useRegister } from "@/hooks/useRegister";
 import { InputPassword } from "@/components/InputPassword";
-import { Message } from "primereact/message";
 import { useToastContext } from "@/providers/ToastContextProvider";
 import { useLayoutEffect } from "react";
 import Head from "next/head";
+import { AxiosError } from "axios";
 
 export default function Register() {
     const router = useRouter();
-    const { mutate, isPending, isSuccess, isError  } = useRegister();
+    const { mutate, isPending, isSuccess, isError, error  } = useRegister();
     const { showToast } = useToastContext();
 
     const { handleChange, values, errors, handleSubmit } = useFormik({
@@ -25,9 +25,7 @@ export default function Register() {
             password: ''
         },
         validationSchema: registerSchemaValidation,
-        onSubmit: values => {
-            mutate(values);
-        },
+        onSubmit: values => mutate(values),
     })
 
     useLayoutEffect(() => {
@@ -40,17 +38,32 @@ export default function Register() {
             })
             router.push('/');
         }
-    }, [isSuccess, router, showToast]);
+
+        if (isError) {
+            if (error instanceof AxiosError) {
+                showToast({
+                    severity: 'error',
+                    summary: 'Erro ao registrar',
+                    detail: error.response?.data.message,
+                    life: 3000
+                })
+            } else {
+                showToast({
+                    severity: 'error',
+                    summary: 'Erro ao registrar',
+                    detail: 'Erro inesperado, tente novamente mais tarde',
+                    life: 3000
+                })
+            }
+        }
+    }, [error, isError, isSuccess, router, showToast]);
 
     return (
         <div className="flex justify-center h-full items-center">
             <Head>
-                <title>Login | Aprove-me</title>
+                <title>Registrar | Aprove-me</title>
             </Head>
             <Card title="Registrar" className="w-[400px]">
-                {isError && (
-                    <Message severity="error" text="Erro ao registrar" className="w-full !justify-start my-2" />
-                )}
                 <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
                     <InputText
                         id="name"
@@ -92,10 +105,11 @@ export default function Register() {
                             className="!p-0"
                             size="small"
                             onClick={() => router.push('/')}
+                            loading={isPending}
                         />
                     </div>
                     <div className="flex justify-end">
-                        <Button type="submit" label="Registrar" />
+                        <Button type="submit" label="Registrar" loading={isPending} />
                     </div>
                 </form>
             </Card>

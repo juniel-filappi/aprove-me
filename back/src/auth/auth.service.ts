@@ -26,7 +26,7 @@ export class AuthService {
     const isValid = await compare(loginDto.password, user.password);
 
     if (!isValid) {
-      throw new BadRequestException('Invalid credentials');
+      throw new BadRequestException('Credenciais inválidas');
     }
 
     return {
@@ -39,7 +39,7 @@ export class AuthService {
     const user = await this.userService.findUserByEmail(registerDto.email);
 
     if (user) {
-      throw new ConflictException('User already exists');
+      throw new ConflictException('Usuário já cadastrado');
     }
 
     return this.userService.create(registerDto);

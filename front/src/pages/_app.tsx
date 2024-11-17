@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import "./globals.css";
 import "primereact/resources/themes/lara-dark-blue/theme.css";
 import 'primeicons/primeicons.css';
@@ -7,11 +6,6 @@ import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import { ToastContextProvider } from "@/providers/ToastContextProvider";
 import { AppProps } from "next/app";
 import { ReactElement } from "react";
-
-export const metadata: Metadata = {
-    title: "Aprove-me",
-    description: "Aprove-me",
-};
 
 
 type AppPropsWithLayout = AppProps & {

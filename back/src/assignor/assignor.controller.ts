@@ -8,12 +8,15 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { AssignorService } from './assignor.service';
 import { CreateAssignorDto } from '@/shared/dto/assignor/create-assignor.dto';
 import { UpdateAssignorDto } from '@/shared/dto/assignor/update-assignor.dto';
+import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 
 @Controller('/assignor')
+@UseGuards(JwtAuthGuard)
 export class AssignorController {
   constructor(private readonly service: AssignorService) {}
 

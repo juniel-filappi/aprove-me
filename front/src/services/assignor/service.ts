@@ -19,13 +19,8 @@ export async function createAssignor(formData: Omit<IAssignor, 'id'>) {
     return data;
 }
 
-export async function updateAssignor(formData: IAssignor) {
-    const { data } = await api.put<IAssignor>(`/integrations/assignor/${formData.id}`, {
-        name: formData.name,
-        email: formData.email,
-        document: formData.document,
-        phone: formData.phone
-    });
+export async function updateAssignor(id: string, formData: Omit<IAssignor, 'id'>) {
+    const { data } = await api.put<IAssignor>(`/integrations/assignor/${id}`, formData);
 
     return data;
 }

@@ -6,16 +6,15 @@ import { useLayoutEffect } from "react";
 import { useToastContext } from "@/providers/ToastContextProvider";
 import LayoutDashboard from "@/components/LayoutDashboard";
 import { AxiosError } from "axios";
-import { useGetPayable } from "@/hooks/usePayable";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Card } from "primereact/card";
-import { formatDate, formatPrice } from "@/utils/helper";
+import { useGetAssignor } from "@/hooks/useAssignor";
 import Head from "next/head";
 
 export default function Show({ id }: { id: string }) {
     const router = useRouter();
     const { showToast } = useToastContext();
-    const { data: payable, error, isError, isLoading } = useGetPayable(id);
+    const { data: assignor, error, isError, isLoading } = useGetAssignor(id);
 
     useLayoutEffect(() => {
         if (isError) {
@@ -29,7 +28,7 @@ export default function Show({ id }: { id: string }) {
                 showToast({
                     severity: 'error',
                     summary: 'Erro',
-                    detail: 'Erro ao buscar recebível.'
+                    detail: 'Erro ao buscar cedente.'
                 })
             }
 
@@ -40,17 +39,18 @@ export default function Show({ id }: { id: string }) {
     return (
         <LayoutDashboard>
             <Head>
-                <title>Visualizar Recebível | Aprove-me</title>
+                <title>Visualizar Cedente | Aprove-me</title>
             </Head>
-            <h1 className="text-4xl">Visualizar Recebível</h1>
+            <h1 className="text-4xl">Visualizar Cedente</h1>
             {isLoading && <ProgressSpinner />}
-            {payable && (
+            {assignor && (
                 <Card className="mt-10" title="Descrição:">
                     <div className="flex flex-col">
-                        <span><b>ID:</b> {payable.id}</span>
-                        <span><b>Cedente:</b> {payable.assignor.name}</span>
-                        <span><b>Valor:</b> {formatPrice(payable.value)}</span>
-                        <span><b>Data de emissão:</b> {formatDate(payable.emissionDate)}</span>
+                        <span><b>ID:</b> {assignor.id}</span>
+                        <span><b>Nome:</b> {assignor.name}</span>
+                        <span><b>Email:</b> {assignor.email}</span>
+                        <span><b>Documento:</b> {assignor.document}</span>
+                        <span><b>Telefone:</b> {assignor.phone}</span>
                     </div>
                     <Button
                         className="mt-2"

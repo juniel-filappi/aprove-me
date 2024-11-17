@@ -17,8 +17,8 @@ export default function LayoutDashboard({ children }: { children: React.ReactNod
         {
             icon: 'pi pi-home',
             label: 'Recebíveis',
-            isActive: currentPath === '/dashboard',
-            onClick: () => router.push('/dashboard')
+            isActive: currentPath?.includes('/dashboard/payable'),
+            onClick: () => router.push('/dashboard/payable')
         },
         {
             icon: 'pi pi-user',

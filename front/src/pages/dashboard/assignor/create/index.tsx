@@ -9,6 +9,7 @@ import { useCreateAssignor } from "@/hooks/useAssignor";
 import { useLayoutEffect } from "react";
 import { useToastContext } from "@/providers/ToastContextProvider";
 import LayoutDashboard from "@/components/LayoutDashboard";
+import Head from "next/head";
 
 export default function Create() {
     const router = useRouter();
@@ -38,6 +39,9 @@ export default function Create() {
 
     return (
         <LayoutDashboard>
+            <Head>
+                <title>Criar Cedente | Aprove-me</title>
+            </Head>
             <h1 className="text-4xl">Cadastrar Cedente</h1>
             <form className="mt-10" onSubmit={formik.handleSubmit}>
                 <FormAssignor formik={formik} loading={isPending} />
@@ -48,9 +52,10 @@ export default function Create() {
                         severity="secondary"
                         outlined
                         icon="pi pi-arrow-left"
+                        loading={isPending}
                         onClick={() => router.push('/dashboard/assignor')}
                     />
-                    <Button type="submit" label="Salvar" />
+                    <Button type="submit" label="Salvar" loading={isPending} />
                 </div>
             </form>
         </LayoutDashboard>

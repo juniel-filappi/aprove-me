@@ -24,14 +24,12 @@ export default function Login() {
             email: '',
             password: ''
         },
-        onSubmit: values => {
-            mutate(values);
-        }
+        onSubmit: values => mutate(values)
     })
 
     useLayoutEffect(() => {
         if (isSuccess) {
-            router.push('/dashboard');
+            router.push('/dashboard/payable');
         }
 
         if (isError) {
