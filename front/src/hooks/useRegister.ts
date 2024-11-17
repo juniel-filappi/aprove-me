@@ -6,7 +6,7 @@ export function useRegister() {
 
     return useMutation({
         mutationFn: register,
-        onSuccess: async () => {
+        onSuccess: async (data) => {
             await queryClient.invalidateQueries({ queryKey: ['user'] });
         }
     })

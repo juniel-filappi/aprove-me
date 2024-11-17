@@ -11,13 +11,9 @@
 
 :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 14px;
   font-weight: 400;
-  max-width: 1280px;
-  margin: 0 auto;
   height: 100%;
-  padding: 2rem;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -28,5 +24,9 @@
 
 body {
   margin: 0;
+  height: 100%;
+}
+
+div#__next {
   height: 100%;
 }

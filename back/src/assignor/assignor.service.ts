@@ -1,55 +1,62 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { AssignorRepository } from "./assignor.repository";
-import { CreateAssignorDto } from "@/shared/dto/assignor/create-assignor.dto";
-import { Assignor } from "@prisma/client";
-import { UpdateAssignorDto } from "@/shared/dto/assignor/update-assignor.dto";
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { AssignorRepository } from './assignor.repository';
+import { CreateAssignorDto } from '@/shared/dto/assignor/create-assignor.dto';
+import { Assignor } from '@prisma/client';
+import { UpdateAssignorDto } from '@/shared/dto/assignor/update-assignor.dto';
 
 @Injectable()
 export class AssignorService {
-    constructor(private readonly repository: AssignorRepository) {
+  constructor(private readonly repository: AssignorRepository) {}
+
+  async getAll(): Promise<Assignor[]> {
+    return this.repository.getAll();
+  }
+
+  async getAssignor(id: string): Promise<Assignor> {
+    const assignor = await this.repository.findById(id);
+
+    if (!assignor) {
+      throw new NotFoundException('Cedente não encontrado.');
     }
 
-    async getAll(): Promise<Assignor[]> {
-        return this.repository.getAll()
+    return assignor;
+  }
+
+  async create(data: CreateAssignorDto): Promise<Assignor> {
+    const assignor = await this.repository.findByDocument(data.document);
+
+    if (assignor) {
+      throw new ConflictException('Cedente já cadastrado.');
     }
 
-    async getAssignor(id: string): Promise<Assignor> {
-        const assignor = await this.repository.findById(id)
+    return this.repository.create(data);
+  }
 
-        if (!assignor) {
-            throw new NotFoundException('Assignor not found')
-        }
+  async update(id: string, data: UpdateAssignorDto): Promise<Assignor> {
+    const assignor = await this.repository.findById(id);
 
-        return assignor
+    if (!assignor) {
+      throw new NotFoundException('Cedente não encontrado.');
     }
 
-    async create(data: CreateAssignorDto): Promise<Assignor> {
-        const assignor = await this.repository.findByDocument(data.document)
+    return this.repository.update(id, data);
+  }
 
-        if (assignor) {
-            throw new ConflictException('Assignor already exists')
-        }
+  async delete(id: string): Promise<void> {
+    const assignor = await this.repository.findById(id);
 
-        return this.repository.create(data)
+    if (!assignor) {
+      throw new NotFoundException('Cedente não encontrado.');
     }
 
-    async update(id: string, data: UpdateAssignorDto): Promise<Assignor> {
-        const assignor = await this.repository.findById(id)
-
-        if (!assignor) {
-            throw new NotFoundException('Assignor not found')
-        }
-
-        return this.repository.update(id, data)
+    if (assignor.payables.length > 0) {
+      throw new ConflictException('Cedente possui recebíveis vinculados.');
     }
 
-    async delete(id: string): Promise<void> {
-        const assignor = await this.repository.findById(id)
-
-        if (!assignor) {
-            throw new NotFoundException('Assignor not found')
-        }
-
-        await this.repository.delete(id)
-    }
+    await this.repository.delete(id);
+  }
 }

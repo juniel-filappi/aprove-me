@@ -6,6 +6,7 @@ interface PropsInputText extends InputTextProps {
     label?: string;
     error?: string;
     loading?: number;
+    required?: boolean;
 }
 
 export function InputText(props: PropsInputText) {
@@ -37,7 +38,12 @@ export function InputText(props: PropsInputText) {
 
     return (
         <div className="flex flex-col">
-            {props.label && <label htmlFor={props.id} className="font-bold">{props.label}</label>}
+            {props.label &&
+                <label htmlFor={props.id} className="font-bold">
+                    {props.label}
+                    {props.required && <span className="text-red-400"> *</span>}
+                </label>
+            }
             {renderInput()}
             {props.error && <small className="text-red-400">{props.error}</small>}
         </div>

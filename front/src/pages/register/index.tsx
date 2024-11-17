@@ -5,13 +5,18 @@ import { InputText } from "@/components/InputText";
 import { Button } from "primereact/button";
 import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
-import { registerSchemaValidation } from "@/app/register/validation";
+import { registerSchemaValidation } from "@/pages/register/validation";
 import { useRegister } from "@/hooks/useRegister";
 import { InputPassword } from "@/components/InputPassword";
+import { Message } from "primereact/message";
+import { useToastContext } from "@/providers/ToastContextProvider";
+import { useLayoutEffect } from "react";
+import Head from "next/head";
 
 export default function Register() {
     const router = useRouter();
-    const { mutate, isPending, isSuccess } = useRegister();
+    const { mutate, isPending, isSuccess, isError  } = useRegister();
+    const { showToast } = useToastContext();
 
     const { handleChange, values, errors, handleSubmit } = useFormik({
         initialValues: {
@@ -25,13 +30,27 @@ export default function Register() {
         },
     })
 
-    if (isSuccess) {
-        router.push('/dashboard');
-    }
+    useLayoutEffect(() => {
+        if (isSuccess) {
+            showToast({
+                severity: 'success',
+                summary: 'Registrado com sucesso',
+                detail: 'Você será redirecionado para o login',
+                life: 3000
+            })
+            router.push('/');
+        }
+    }, [isSuccess, router, showToast]);
 
     return (
         <div className="flex justify-center h-full items-center">
+            <Head>
+                <title>Login | Aprove-me</title>
+            </Head>
             <Card title="Registrar" className="w-[400px]">
+                {isError && (
+                    <Message severity="error" text="Erro ao registrar" className="w-full !justify-start my-2" />
+                )}
                 <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
                     <InputText
                         id="name"
