@@ -102,10 +102,10 @@ $ yarn prisma studio
 - [ ] Nível 10 - Infra as a Code
 
 ### Frontend
-- [ ] Nível 1 - Cadastro
-- [ ] Nível 2 - Conectando na API
-- [ ] Nível 3 - Listando
-- [ ] Nível 4 - Autenticação
+- [x] Nível 1 - Cadastro
+- [x] Nível 2 - Conectando na API
+- [x] Nível 3 - Listando
+- [x] Nível 4 - Autenticação
 - [ ] Nível 5 - Testes
 
 ---
